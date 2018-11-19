@@ -19,9 +19,34 @@ de dados. +1 -> pig; -1 -> dog."""
 marking = [1, 1, 1, -1, -1, -1]
 model = MultinomialNB()
 model.fit(data, marking)
-#Incomming data
+
+""" 
+ ##########################################################
+# Base de dados contendo os elementos que serão utilizados #
+# para verificar o erro do sistema                         #
+ ##########################################################
+"""
 mistery1 = [1, 1, 1]
 mistery2 = [1, 0, 0]
-try_out = [mistery1, mistery2]
-for item in model.predict(try_out):
-    print("Porco" if item == 1 else "Cachorro")
+mistery3 = [0, 0, 1]
+#Array com todos os dados da base de verificação
+try_out = [mistery1, mistery2, mistery3]
+marking_test = [-1, 1, -1]
+result = model.predict(try_out)
+
+print("Predicted\t\t\tCorrect", end="\n\n")
+for index in range(len(try_out)):
+    print("Porco\t" if result[index] == 1 else "Cachorro", end="")
+    print("\t\t\t", end="")
+    print("Porco" if marking_test[index] == 1 else "Cachorro")
+
+print("", end="\n\n")
+#Verifica a diferença para calcular o erro (Resultado obtido
+# menos a marcação de teste feita na mão) -> Caso 0 acertou
+# Caso diferente de 0 errou
+diff = result - marking_test
+correct = [d for d in diff if d==0]
+total_correct = len(correct)
+total_elements = len(try_out)
+rate_percentage = 100.0 * total_correct/total_elements
+print("Porcentagem de acertos: " + str(rate_percentage))
